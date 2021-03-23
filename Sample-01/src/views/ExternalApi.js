@@ -4,6 +4,7 @@ import Highlight from "../components/Highlight";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { getConfig } from "../config";
 import Loading from "../components/Loading";
+import { makeRequest } from "../lib/requester"
 
 export const ExternalApiComponent = () => {
   const { apiOrigin = "http://localhost:3001", audience } = getConfig();
@@ -58,13 +59,7 @@ export const ExternalApiComponent = () => {
     try {
       const token = await getAccessTokenSilently();
 
-      const response = await fetch(`${apiOrigin}/api/external`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const responseData = await response.json();
+      const responseData = await makeRequest('/api/external', token)
 
       setState({
         ...state,
