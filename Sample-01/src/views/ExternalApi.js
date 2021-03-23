@@ -57,9 +57,7 @@ export const ExternalApiComponent = () => {
 
   const callApi = async () => {
     try {
-      const token = await getAccessTokenSilently();
-
-      const responseData = await makeRequest('/api/external', token)
+      const responseData = await makeRequest('/api/external')
 
       setState({
         ...state,

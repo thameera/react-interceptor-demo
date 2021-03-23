@@ -1,13 +1,10 @@
 const axios = require('axios')
 
-export const makeRequest = async (path, token) => {
+export const makeRequest = async (path) => {
   try {
     const res = await axios({
       method: 'GET',
-      url: `http://localhost:3001${path}`,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      url: `http://localhost:3001${path}`
     })
 
     return res.data

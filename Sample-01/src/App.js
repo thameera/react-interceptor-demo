@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { Container } from "reactstrap";
 
@@ -10,6 +10,7 @@ import Profile from "./views/Profile";
 import ExternalApi from "./views/ExternalApi";
 import { useAuth0 } from "@auth0/auth0-react";
 import history from "./utils/history";
+import axios from 'axios'
 
 // styles
 import "./App.css";
@@ -19,7 +20,24 @@ import initFontAwesome from "./utils/initFontAwesome";
 initFontAwesome();
 
 const App = () => {
-  const { isLoading, error } = useAuth0();
+  const { isLoading, error, user, getAccessTokenSilently } = useAuth0();
+
+  useEffect(() => {
+    let interceptor
+
+    const run = async () => {
+      const token = await getAccessTokenSilently()
+      interceptor = axios.interceptors.request.use((config) => {
+        config.headers['Authorization'] = `Bearer ${token}`
+        return config
+      })
+    }
+
+    run()
+    return () => {
+      axios.interceptors.request.eject(interceptor)
+    }
+  }, [user])
 
   if (error) {
     return <div>Oops... {error.message}</div>;
